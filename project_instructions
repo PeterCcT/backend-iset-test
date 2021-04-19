@@ -1,0 +1,4 @@
+Uma distribuidora de produtos de limpeza possui filiais nos seguintes CEPs(02739-000; 22050-002; 31630-900; 32040-630; 32600-100; 14010-000; 24020-030; 35740-000; 29300-100; 29900-200) 
+afim de obter o menor custo de transporte, o setor de logística desta empresa precisa identificar qual(is) destas filiais teriam o menor custo de frete para transportar um produto de 2,00kg e com as seguintes dimensões 10L x 10A x 10C,
+utilizando apenas as modalidades PAC e SEDEX dos Correios para uma região que possui a seguinte faixa de cep 59980-000 ao 59985-000.
+Desenvolva um serviço onde é possível realizar as cotações de forma rápida baseada na demanda acima exibindo a menor cotação, seja por PAC ou SEDEX e de qual filial é a melhor escolha por onde deve ser enviado o produto.
