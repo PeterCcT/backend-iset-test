@@ -11,7 +11,7 @@ const originZipcodes = [
     '29900-200'
 ]
 
-const destinyZipcodesRanges = ['59980-000', '59985-000']
+const destinyZipcodesRanges = ['59980-000', '59983-000']
 
 const product = {
     'weigth': 2,
@@ -21,8 +21,8 @@ const product = {
     'diameter': 0,
 }
 
-const { ZipcodeService } = require('./zipcode.service')
-const { ZipcodeFormatter } = require('./zipcode.utils')
+const { ZipcodeService } = require('./services/zipcode.service')
+const { ZipcodeFormatter } = require('./formatters/zipcode.formatter')
 
 const zipcodeFormatter = new ZipcodeFormatter()
 const zipcodeService = new ZipcodeService()

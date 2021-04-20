@@ -1,0 +1,14 @@
+{
+  "name": "FirstProject",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/PeterCcT/teste-iset.git",
+  "author": "PeterCcT <pedrorodriguesfereira@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "soap": "^0.37.0"
+  }
+}
