@@ -21,14 +21,15 @@ const product = {
     'diameter': 0,
 }
 
-const { ZipcodeService } = require('./services/zipcode.service')
+const { getZipcodeService } = require('./services')
 const { ZipcodeFormatter } = require('./formatters/zipcode.formatter')
-
 const zipcodeFormatter = new ZipcodeFormatter()
-const zipcodeService = new ZipcodeService()
+const zipcodeService = getZipcodeService()
 
 zipcodeService.calculateTheShippestShippingService(
     zipcodeFormatter.formatArrayOfZipcodes(originZipcodes, '-', false),
     zipcodeFormatter.getZipcodeRange(destinyZipcodesRanges[0], destinyZipcodesRanges[1], true),
     product
-)
+).then(shippestShipping => {
+    console.log('A entrega mais barata é: ', shippestShipping)
+})

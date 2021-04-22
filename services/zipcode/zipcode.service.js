@@ -1,10 +1,10 @@
-const { ZipcodeClient } = require('../client/zipcode.client')
-const { isObjecEmpty } = require('../utils/objects')
+const { ZipcodeClient } = require('../../client/zipcode.client')
+const { isObjecEmpty } = require('../../utils/objects')
 
 class ZipcodeService {
 
-    constructor() {
-        this.#zipcodeClient = new ZipcodeClient()
+    constructor(zipcodeClient) {
+        this.#zipcodeClient = zipcodeClient
     }
 
     #zipcodeClient
@@ -23,8 +23,9 @@ class ZipcodeService {
     }
 
     #_getTheShippestShipping(results) {
+        const maxNumber = Number.MAX_SAFE_INTEGER
         const shippestShippingInfo = {
-            value: Number.MAX_SAFE_INTEGER,
+            value: maxNumber,
         }
         for (const result of results) {
             if (isObjecEmpty(result))
@@ -38,14 +39,14 @@ class ZipcodeService {
                 shippestShippingInfo['value'] = value
             }
         }
-        return shippestShippingInfo
+        return shippestShippingInfo.value == maxNumber ? {} : shippestShippingInfo
     }
 
     async calculateTheShippestShippingService(originZipcodes, destinyZipcodes, product) {
         const preparedRequests = this.#_prepareRequests(originZipcodes, destinyZipcodes, product)
         const responses = await Promise.all(preparedRequests)
         const shippestShipping = this.#_getTheShippestShipping(responses)
-        console.log('A entrega mais barata é: ', shippestShipping)
+        return shippestShipping
     }
 }
 

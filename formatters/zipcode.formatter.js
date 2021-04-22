@@ -17,6 +17,9 @@ class ZipcodeFormatter {
         let nonVariyPart = firstZipcode[isToVariyFirstPart ? 1 : 0]
         for (let currentZipcode = initiZipcodePart; currentZipcode <= finalZipcodePart; currentZipcode++) {
             let zipcode = `${currentZipcode}`
+            if (zipcode.length === 1) {
+                zipcode = `00${zipcode}`
+            }
             zipcode = isToVariyFirstPart ? `${zipcode}${nonVariyPart}` : `${nonVariyPart}${zipcode}`
             zipcodeRange.push(zipcode)
         }

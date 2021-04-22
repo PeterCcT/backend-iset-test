@@ -45,9 +45,7 @@ class ZipcodeClient {
 
     get #_apiClient() {
         return this.soapClient.createClientAsync(this.#baseApiUrl, {
-            wsdl_options: {
-                timeout: 40000
-            }
+            wsdl_options: { timeout: 20000 }
         })
     }
 

@@ -6,7 +6,8 @@
   "author": "PeterCcT <pedrorodriguesfereira@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "node tests/formatters/index.js"
   },
   "dependencies": {
     "soap": "^0.37.0"
