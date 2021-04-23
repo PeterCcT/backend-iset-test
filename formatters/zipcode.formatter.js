@@ -1,5 +1,4 @@
 class ZipcodeFormatter {
-
     formatArrayOfZipcodes(zipcodes, pattern, isToSplit) {
         return zipcodes.map((zipcode) => isToSplit ? this.split(zipcode, pattern) : this.replace(zipcode, pattern))
     }

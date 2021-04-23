@@ -7,7 +7,7 @@ for dir in $TESTS_DIR; do
             CURRENT_DIR_FILES="$(ls $CURRENT_DIR_PATH)"
             for file in $CURRENT_DIR_FILES; do
                 if [ $file = server ]; then
-                    node $CURRENT_DIR_PATH/$file/index.js & 
+                    node $CURRENT_DIR_PATH/$file/index.js &
                     SERVER_PID=$!
                 else
                     node $CURRENT_DIR_PATH/$file

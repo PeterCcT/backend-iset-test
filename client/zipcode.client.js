@@ -1,88 +1,48 @@
 class ZipcodeClient {
-    constructor() {
-        this.soapClient = require('soap')
+    constructor(soapClient, zipcodeApiFormatter, zipcodeApiFields) {
+        this.#apiFieldsFormatter = zipcodeApiFormatter
+        this.#apiFields = zipcodeApiFields
+        this.soapClient = soapClient
     }
     #baseApiUrl = 'http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?wsdl'
-    #baseServices = Object.freeze({
-        'SEDEX': '4014',
-        'PAC': '4510'
-    })
-    #baseParams = {
-        'nCdEmpresa': '',
-        'sDsSenha': '',
-        'sCepOrigem': '',
-        'sCepDestino': '',
-        'nCdFormato': 1,
-        'nVlPeso': 0,
-        'nVlAltura': 0,
-        'nVlComprimento': 0,
-        'nVlLargura': 0,
-        'nVlDiametro': 0,
-        'sCdMaoPropria': 'n',
-        'nVlValorDeclarado': 0,
-        'sCdAvisoRecebimento': 'n',
-        'StrRetorno': 'xml'
-    }
+
+    #apiFieldsFormatter
+    #apiFields
 
     soapClient
 
-    #_formatBaseParams(originZipcode, destinyZipcode, product) {
-        const requestParams = { ...this.#baseParams }
-        requestParams.sCepOrigem = originZipcode
-        requestParams.sCepDestino = destinyZipcode
-        requestParams.nVlPeso = product.weigth.toString()
-        requestParams.nVlAltura = product.height.toFixed(1)
-        requestParams.nVlLargura = product.width.toFixed(1)
-        requestParams.nVlComprimento = product.length.toFixed(1)
-        requestParams.nVlDiametro = product.diameter.toFixed(1)
+    #_formatBaseParams(originZipcode, destinyZipcode, product, serviceType) {
+        const requestParams = this.#apiFieldsFormatter.formatBaseParams(originZipcode, destinyZipcode, product, serviceType)
         return requestParams
     }
 
-    #_formatServiceParam(serviceType, baseParams) {
-        baseParams[`nCdServico`] = serviceType
-        return baseParams
-    }
 
     get #_apiClient() {
         return this.soapClient.createClientAsync(this.#baseApiUrl, {
-            wsdl_options: { timeout: 20000 }
+            wsdl_options: { timeout: 40000 }
         })
     }
 
-    #_formatCalcPrecoResponse(result, params) {
+    #_formatCalcPrecoResponse(result, originZipcode, destinyZipcode) {
         const [calcPrecoResult] = result
-        const serviceResult = calcPrecoResult['CalcPrecoPrazoResult']['Servicos']['cServico'][0]
-        const error = serviceResult['Erro']
-        const theServiceResultContainsError = error !== '0' || error === ''
-        if (theServiceResultContainsError)
-            return {}
-        const serviceCode = serviceResult['Codigo'].toString()
-        serviceResult['deliveryTime'] = Number(serviceResult['PrazoEntrega'])
-        serviceResult['value'] = Number(serviceResult['Valor'].replace(',', '.'))
-        serviceResult['originCep'] = params['sCepOrigem']
-        serviceResult['destinyCep'] = params['sCepDestino']
-        serviceResult['serviceType'] = this.#baseServices.SEDEX === serviceCode ? 'SEDEX' : 'PAC'
-        return serviceResult
+        return this.#apiFieldsFormatter.formattedCalcPrecoResponse(calcPrecoResult, originZipcode, destinyZipcode)
     }
 
-    async #_formatCalcPrecoRequestResponseCall(client, params) {
+    async #_formatCalcPrecoRequestResponseCall(client, params, originZipcode, destinyZipcode) {
         const result = await client.CalcPrecoPrazoAsync(params)
-        const formattedResponse = this.#_formatCalcPrecoResponse(result, params)
+        const formattedResponse = this.#_formatCalcPrecoResponse(result, originZipcode, destinyZipcode)
         return formattedResponse
     }
 
-    async #_formatCalcPrecoRequestCall(params) {
+    async #_formatCalcPrecoRequestCall(params, originZipcode, destinyZipcode) {
         const client = await this.#_apiClient
-        return this.#_formatCalcPrecoRequestResponseCall(client, params)
+        return this.#_formatCalcPrecoRequestResponseCall(client, params, originZipcode, destinyZipcode)
     }
 
-
-
-    getCalcPrecoRequestCall(origingZipcode, destinyZipcode, product, isSedex) {
-        const serviceType = isSedex ? this.#baseServices.SEDEX : this.#baseServices.PAC
-        const baseParams = this.#_formatBaseParams(origingZipcode, destinyZipcode, product)
-        const serviceParam = this.#_formatServiceParam(serviceType, baseParams)
-        return this.#_formatCalcPrecoRequestCall(serviceParam)
+    getCalcPrecoRequestCall(originZipcode, destinyZipcode, product, isSedex) {
+        const serviceType = isSedex ? this.#apiFields.sedexServiceCode : this.#apiFields.pacServiceCode
+        const baseParams = this.#_formatBaseParams(originZipcode, destinyZipcode, product, serviceType)
+        return this.#_formatCalcPrecoRequestCall(baseParams, originZipcode, destinyZipcode)
     }
 
 }

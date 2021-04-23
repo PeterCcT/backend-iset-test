@@ -1,7 +1,7 @@
-const { ZipcodeFormatter } = require('../../formatters/zipcode.formatter')
-const { TestCases } = require('../configs')
-const testCases = new TestCases()
-const zipcodeFormatter = new ZipcodeFormatter()
+const { ClassManager } = require('../../utils/class_manager')
+const { TestManager } = require('../configs')
+const testCases = new TestManager()
+const zipcodeFormatter = ClassManager.getZipcodeFormatter
 
 console.log('TEST CASES FOR ZIPCODE FORMATTER\n')
 console.log('------------------\n')
@@ -35,14 +35,14 @@ testCases.testFunction(
 )
 
 testCases.testFunction(
-    'Zipcode formatter, get range of ceps variying first part',
+    'Zipcode formatter, get range of ceps varying first part',
     zipcodeFormatter.getZipcodeRange.bind(zipcodeFormatter),
     ['10000000', '10001000', '10002000', '10003000'],
     ['10000-000', '10003-000', true]
 )
 
 testCases.testFunction(
-    'Zipcode formatter, get range of ceps variying second part',
+    'Zipcode formatter, get range of ceps varying second part',
     zipcodeFormatter.getZipcodeRange.bind(zipcodeFormatter),
     ['10000001', '10000002', '10000003', '10000004'],
     ['10000-001', '10000-004', false]

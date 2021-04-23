@@ -1,5 +1,4 @@
-const { ZipcodeClient } = require('../../client/zipcode.client')
-const { isObjecEmpty } = require('../../utils/objects')
+const { isObjecEmpty: isObjectEmpty } = require('../utils/objects')
 
 class ZipcodeService {
 
@@ -8,7 +7,6 @@ class ZipcodeService {
     }
 
     #zipcodeClient
-
 
     #_prepareRequests(originsZipcodes, destinyZipcodes, product) {
         const asyncRequests = []
@@ -22,31 +20,27 @@ class ZipcodeService {
         return asyncRequests
     }
 
-    #_getTheShippestShipping(results) {
+    #_getTheCheaperShipping(results) {
         const maxNumber = Number.MAX_SAFE_INTEGER
-        const shippestShippingInfo = {
+        let cheaperShippingInfo = {
             value: maxNumber,
         }
         for (const result of results) {
-            if (isObjecEmpty(result))
+            if (isObjectEmpty(result))
                 continue
             const value = result['value']
-            if (shippestShippingInfo.value > value) {
-                shippestShippingInfo['serviceType'] = result['serviceType']
-                shippestShippingInfo['originCep'] = result['originCep']
-                shippestShippingInfo['destinyCep'] = result['destinyCep']
-                shippestShippingInfo['deliveryTime'] = result['deliveryTime']
-                shippestShippingInfo['value'] = value
+            if (cheaperShippingInfo.value > value) {
+                cheaperShippingInfo = result
             }
         }
-        return shippestShippingInfo.value == maxNumber ? {} : shippestShippingInfo
+        return cheaperShippingInfo.value == maxNumber ? {} : cheaperShippingInfo
     }
 
-    async calculateTheShippestShippingService(originZipcodes, destinyZipcodes, product) {
+    async calculateTheCheaperShippingService(originZipcodes, destinyZipcodes, product) {
         const preparedRequests = this.#_prepareRequests(originZipcodes, destinyZipcodes, product)
         const responses = await Promise.all(preparedRequests)
-        const shippestShipping = this.#_getTheShippestShipping(responses)
-        return shippestShipping
+        const cheaperShipping = this.#_getTheCheaperShipping(responses)
+        return cheaperShipping
     }
 }
 

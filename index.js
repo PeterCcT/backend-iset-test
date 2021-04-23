@@ -11,25 +11,24 @@ const originZipcodes = [
     '29900-200'
 ]
 
-const destinyZipcodesRanges = ['59980-000', '59983-000']
+const destinyZipcodesRanges = ['59980-000', '59985-000']
 
 const product = {
-    'weigth': 2,
+    'weight': 2,
     'width': 15,
     'height': 10,
     'length': 16,
     'diameter': 0,
 }
 
-const { getZipcodeService } = require('./services')
-const { ZipcodeFormatter } = require('./formatters/zipcode.formatter')
-const zipcodeFormatter = new ZipcodeFormatter()
-const zipcodeService = getZipcodeService()
+const { ClassManager } = require('./utils/class_manager')
+const zipcodeFormatter = ClassManager.getZipcodeFormatter
+const zipcodeService = ClassManager.getZipcodeService
 
-zipcodeService.calculateTheShippestShippingService(
+zipcodeService.calculateTheCheaperShippingService(
     zipcodeFormatter.formatArrayOfZipcodes(originZipcodes, '-', false),
     zipcodeFormatter.getZipcodeRange(destinyZipcodesRanges[0], destinyZipcodesRanges[1], true),
     product
-).then(shippestShipping => {
-    console.log('A entrega mais barata é: ', shippestShipping)
+).then(cheaperShipping => {
+    console.log(cheaperShipping)
 })

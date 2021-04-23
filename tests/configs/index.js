@@ -1,4 +1,4 @@
-class TestCases {
+class TestManager {
 
     constructor() {
         const { performance } = require('perf_hooks')
@@ -50,4 +50,4 @@ class TestCases {
 
 }
 
-module.exports = { TestCases }
+module.exports = { TestManager }

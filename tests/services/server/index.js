@@ -1,9 +1,9 @@
 const http = require('http')
+const { formattedResponse } = require('../../configs/mock/api.mock')
 const {
     standardResponseOriginZipcode,
-    standardResponseDestinyZipcode,
-    response
-} = require('../server/mock/server.mock')
+    standardResponseDestinyZipcode
+} = require('../../configs/mock/standard.mock')
 
 function getRandomValue() {
     return Math.floor(Math.random() * (15 - 12) + 12)
@@ -27,7 +27,7 @@ http.createServer((req, res) => {
             let responseToClient
             const [originZipcode, destinyZipcode] = getOriginAndDestinyZipcodes(req.url)
             if (originZipcode === standardResponseOriginZipcode && destinyZipcode === standardResponseDestinyZipcode) {
-                responseToClient = response
+                responseToClient = formattedResponse
             } else {
                 responseToClient = {
                     value: getRandomValue(),
@@ -44,6 +44,4 @@ http.createServer((req, res) => {
             res.statusCode(405)
             break;
     }
-}).listen(3000, () => {
-    console.log('Server running on port 3000')
-})
+}).listen(3000)
