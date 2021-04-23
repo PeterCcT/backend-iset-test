@@ -61,7 +61,7 @@ class ZipcodeClient {
         serviceResult['value'] = Number(serviceResult['Valor'].replace(',', '.'))
         serviceResult['originCep'] = params['sCepOrigem']
         serviceResult['destinyCep'] = params['sCepDestino']
-        serviceResult['Codigo'] = this.#baseServices.SEDEX === serviceCode ? 'SEDEX' : 'PAC'
+        serviceResult['serviceType'] = this.#baseServices.SEDEX === serviceCode ? 'SEDEX' : 'PAC'
         return serviceResult
     }
 

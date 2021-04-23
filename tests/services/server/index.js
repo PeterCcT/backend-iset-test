@@ -6,12 +6,16 @@ const {
 } = require('../server/mock/server.mock')
 
 function getRandomValue() {
-    return Math.floor(Math.random() * (min - max))
+    return Math.floor(Math.random() * (15 - 12) + 12)
+}
+
+function getRandomDeliveryTime() {
+    return Math.floor(Math.random() * (10 - 1) + 1)
 }
 
 function getOriginAndDestinyZipcodes(url) {
     const { URL } = require('url')
-    const uri = new URL(url)
+    const uri = new URL(`http://localhost:3000${url}`)
     return [uri.searchParams.get('origin'), uri.searchParams.get('destiny')]
 }
 
@@ -23,17 +27,17 @@ http.createServer((req, res) => {
             let responseToClient
             const [originZipcode, destinyZipcode] = getOriginAndDestinyZipcodes(req.url)
             if (originZipcode === standardResponseOriginZipcode && destinyZipcode === standardResponseDestinyZipcode) {
-                responseToClient = Object.assign({ 'Codigo': 04510 }, response)
+                responseToClient = response
+            } else {
+                responseToClient = {
+                    value: getRandomValue(),
+                    serviceType: 'PAC',
+                    originCep: originZipcode,
+                    destinyCep: destinyZipcode,
+                    deliveryTime: getRandomDeliveryTime(),
+                }
             }
-            responseToClient = {
-                Codigo: 04510,
-                value: getRandomValue(),
-                serviceType: 'PAC',
-                originZipcode: originZipcode,
-                destinyZipcode: destinyZipcode,
-                deliveryTime: 1,
-            }
-            setTimeout(res.end(responseToClient), 1000)
+            setTimeout(() => res.end(JSON.stringify(responseToClient)), 3000)
             break;
 
         default:

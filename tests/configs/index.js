@@ -1,40 +1,50 @@
 class TestCases {
 
     constructor() {
+        const { performance } = require('perf_hooks')
         this.#assert = require('assert')
+        this.#performance = performance
     }
 
     #assert
+    #performance
 
     testFunction(name, fn, expected, args) {
+        const startTime = this.#performance.now()
         let result
         const isExpectingAnObject = typeof (expected) === 'object'
         try {
             console.log(`TESTING: ${name}`)
             result = fn(...args)
             isExpectingAnObject ? this.#assert.deepStrictEqual(result, expected) : this.#assert.strictEqual(result, expected)
-            console.log('STATUS: 🆗 \n')
+            console.log('STATUS: 🆗')
         } catch (error) {
-            console.error(`STATUS: ❌ \n`)
-            console.log(`EXPECTED ${expected}\nRECEIVED ${result}`)
-            console.log(`Error log: ${error}\n`)
+            console.error(`STATUS: ❌`)
+            console.log(`EXPECTED: ${JSON.stringify(expected)}\nRECEIVED: ${JSON.stringify(result)}`)
+            console.log(`Error log: ${error}`)
+        } finally {
+            const endTime = this.#performance.now()
+            console.log(`TIME: ${endTime - startTime}ms\n`)
+
         }
     }
 
-    testeAsyncFunction(name, fn, expected, args) {
+    async testeAsyncFunction(name, fn, expected, args) {
+        const startTime = this.#performance.now()
         let result
         const isExpectingAnObject = typeof (expected) === 'object'
         try {
-            console.log(`TESTING: ${name}`)
-            fn(...args).then((res) => {
-                result = res
-                isExpectingAnObject ? this.#assert.deepStrictEqual(result, expected) : this.#assert.strictEqual(result, expected)
-                console.log('STATUS: 🆗 \n')
-            })
+            console.log(`ASYNC TESTING: ${name}`)
+            result = await fn(...args)
+            isExpectingAnObject ? this.#assert.deepStrictEqual(result, expected) : this.#assert.strictEqual(result, expected)
+            console.log('STATUS: 🆗 \n')
         } catch (error) {
             console.error(`STATUS: ❌ \n`)
-            console.log(`EXPECTED ${expected}\nRECEIVED ${result}`)
+            console.log(`EXPECTED: ${JSON.stringify(expected)}\nRECEIVED: ${JSON.stringify(result)}`)
             console.log(`Error log: ${error}\n`)
+        } finally {
+            const endTime = this.#performance.now()
+            console.log(`TIME: ${endTime - startTime}ms\n`)
         }
     }
 

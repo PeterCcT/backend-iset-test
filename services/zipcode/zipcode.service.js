@@ -32,7 +32,7 @@ class ZipcodeService {
                 continue
             const value = result['value']
             if (shippestShippingInfo.value > value) {
-                shippestShippingInfo['serviceType'] = result['Codigo']
+                shippestShippingInfo['serviceType'] = result['serviceType']
                 shippestShippingInfo['originCep'] = result['originCep']
                 shippestShippingInfo['destinyCep'] = result['destinyCep']
                 shippestShippingInfo['deliveryTime'] = result['deliveryTime']
